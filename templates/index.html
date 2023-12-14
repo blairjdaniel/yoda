@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="static/css/stylesheets.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head> 
+
+<body>
+  <nav class="navbar">
+    <a href="{{ url_for('file') }}">Files</a>
+    <a href="{{ url_for('log') }}">Logs</a>
+  </nav>
+
+  <div class="main-div1">
+  <h2>Yoda's Answer</h2>
+  <div id="yoda-container">
+    <div class="conversation">
+      {% for message in thread_messages %}
+      <div class="{{ 'user-message' if 'User:' in message else 'assistant-message
+      ' }}">
+          {{ message | safe }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <form action="{{ url_for('reset') }}" method="post">
+    <button type="submit" name="reset" value="true">Reset</button>
+  </form>
+</div>
+<div class="main-div2">
+  <h2>Ask Yoda a Question!</h2>
+  <div class="form-container">
+      <form action="{{ url_for('home') }}" method="post" enctype="multipart/form-data">
+        <label for="question"></label><br>
+        <input type="text" id="message" name="message" value="{{ filenames[-1] if filenames else '' }}"><br>
+        <input type="submit" value="Add & Run"><br>
+        <input type="file" id="fileInput" name="file" onchange="readFile(this)">
+        <textarea id="textInput" rows="10" cols="50"></textarea>
+        <input type="submit" value="Add & Run File">
+      </form>  
+  <div id="uploaded-files">
+    <h2>Uploaded Files</h2>
+    {% for filename in uploaded_files %}
+        <div class="uploaded-file-entry">
+            <span>{{ filename }}</span>
+                <!-- Button to use the file with assistant -->
+            <button onclick="useFile('{{ filename }}')">Use with Assistant</button>
+        </div>
+    {% endfor %}
+  </div>
+  </div>
+</div>
+
+  <script type="text/javascript">
+    function readFile(input) {
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('fileContent').value = e.target.result;
+    document.getElementById('message').value = file.name;
+  };
+  reader.readAsText(file);
+}
+  </script>
+  <script>
+    function useFile(filename) {
+        // Implement AJAX request to send the file to the assistant
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/use_for_assistant/' + encodeURIComponent(filename), true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                showAssistantResponse(response.assistant_message);
+            } else {
+                console.error('Error when trying to send to the assistant:', xhr.responseText);
+            }
+        };
+        xhr.send();
+    }
+    
+    function showAssistantResponse(message) {
+        // Function to display the assistant response in the UI, you can define where and how to show it.
+        var responseContainer = document.getElementById('assistant-response-container');
+        responseContainer.innerHTML = message; // Display message in an element, or append to conversation
+    }
+    </script>
+</body>
+</html>
+

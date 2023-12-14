@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple AI Playground</title>
+    <style>
+       
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('file') }}">Files</a>
+    </nav>
+
+    <h1>Simple AI Playground</h1>
+    
+    <div id="inputArea">
+        <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+        <button id="submitButton">Submit</button>
+    </div>
+    
+    <div id="outputArea">
+        <div class="output" id="outputText">Your AI output will appear here...</div>
+    </div>
+
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function() {
+            var inputText = document.getElementById('inputText').value;
+            // Here, you would normally make an API request to OpenAI or another AI service
+            // Since we can't do that here, we'll just simulate a response
+            var simulatedResponse = "Simulated response based on input: " + inputText;
+            document.getElementById('outputText').innerText = simulatedResponse;
+        });
+    </script>
+
+</body>
+</html>

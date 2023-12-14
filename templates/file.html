@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Management</title>
+    <!-- You may include any head elements like stylesheets or title here -->
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('log') }}">Logs</a>
+    </nav>
+
+    <!-- File Upload Form -->
+    <h2>Upload New File</h2>
+    <form action="{{ url_for('home') }}" method="post" enctype="multipart/form-data">
+        <!-- Add CSRF Token if required -->
+        <input type="file" name="file" />
+        <input type="submit" value="Upload" />
+    </form>
+
+    <hr>
+
+    <h2>Search Files</h2>
+    <!-- Update this form once the search route is implemented in app.py -->
+    <form action="#" method="post">
+        <!-- Add CSRF Token if required -->
+        <input type="text" name="query" placeholder="Enter filename to search" />
+        <input type="submit" value="Search" disabled="disabled" />
+    </form>
+
+    <!-- File Listing, Downloading, and Deletion -->
+    {% for file in files %}
+    <div class="file-entry">
+        <p>Filename: {{ file.filename }}</p>
+        <p>Size: {{ file.size }} bytes</p>
+        <p>Creation Time: {{ file.creation_time }}</p>
+        <p>Modification Time: {{ file.modification_time }}</p>
+        <a href="{{ url_for('download_file', filename=file.filename) }}">Download</a>
+        <form action="{{ url_for('delete_file', filename=file.filename) }}" method="post">
+            <!-- Add CSRF Token if required -->
+            <input type="submit" value="Delete">
+        </form>
+        <!-- File entry in file.html -->
+    {% for file in files %}
+    <div class="file-entry">
+        <!-- ... other file information ... -->
+        <button onclick="sendToAssistant('{{ file.filename }}')">Ask Assistant</button>
+    </div>
+    {% endfor %}
+    </div>
+    {% else %}
+    <p>No files uploaded yet.</p>
+    {% endfor %}
+
+        <script>
+            function sendToAssistant(filename) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/use_for_assistant/' + encodeURIComponent(filename), true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        console.log('Assistant response:', response.assistant_message);
+                    // You can update the UI to show the assistant's response here
+                    } else {
+                        console.error('Error sending file to assistant:', xhr.responseText);
+                    }
+                };
+                xhr.send();
+            }
+        </script>
+</body>
+</html>
