@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="static/css/stylesheets.css">
+  <link rel="stylesheet" type="text/css" href="yoda/static/css/stylesheets.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head> 
 
@@ -39,6 +39,11 @@
         <textarea id="textInput" rows="10" cols="50"></textarea>
         <input type="submit" value="Add & Run File">
       </form>  
+      <form action="{{ url_for('home') }}" method="post" enctype="multipart/form-data">
+        <label for="file">Choose file to upload:</label><br>
+        <input type="file" id="file" name="file" accept=".txt,.pdf,.png,.jpg,.jpeg,.gif"><br>
+        <input type="submit" value="Upload File">
+      </form>
   <div id="uploaded-files">
     <h2>Uploaded Files</h2>
     {% for filename in uploaded_files %}

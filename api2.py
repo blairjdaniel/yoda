@@ -1,10 +1,9 @@
 from openai import OpenAI
 import json
 import time
-from docx import Document
 from IPython.display import display
 
-ASSISTANT_ID = "asst_mqyie5cnT7D1Ylxt4B2tktBx"  # or a hard-coded ID like "asst-..."
+ASSISTANT_ID = "asst_iI7puRBKhk6QyA8TJfOg9V5v"  # or a hard-coded ID like "asst-..."
 
 client = OpenAI()
 user_input = ""
